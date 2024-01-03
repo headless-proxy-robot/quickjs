@@ -155,6 +155,14 @@ func (ctx *Context) Function(fn Function) Value {
 	return Value{ctx: ctx, ref: C.JS_Call(ctx.ref, val.ref, ctx.Null().ref, C.int(len(args)), &args[0])}
 }
 
+func (ctx *Context) CallFunction(fn Value, args []Value) Value {
+	argsJSValue := make([]C.JSValue, 0)
+	for _, arg := range args {
+		argsJSValue = append(argsJSValue, arg.ref)
+	}
+	return Value{ctx: ctx, ref: C.JS_Call(ctx.ref, fn.ref, ctx.Null().ref, C.int(len(argsJSValue)), &argsJSValue[0])}
+}
+
 func (ctx *Context) Null() Value {
 	return Value{ctx: ctx, ref: C.JS_NewNull()}
 }
